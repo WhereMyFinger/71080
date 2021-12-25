@@ -25,7 +25,7 @@ public class PlaceRushOrderController extends BaseController {
      * This method checks the avalibility of product when user click PlaceOrder button
      * @throws SQLException
      */
-    public void placeOrder() throws SQLException{
+    public void placeRushOrder() throws SQLException{
         Cart.getCart().checkAvailabilityOfProduct();
     }
 
@@ -41,7 +41,7 @@ public class PlaceRushOrderController extends BaseController {
             OrderMedia orderMedia = new OrderMedia(cartMedia.getMedia(), 
                                                    cartMedia.getQuantity(), 
                                                    cartMedia.getPrice());    
-            order.getlstOrderMedia().add(orderMedia);
+            order.getlistOrderMedia().add(orderMedia);
         }
         return order;
     }

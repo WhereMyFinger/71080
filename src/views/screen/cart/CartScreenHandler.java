@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import common.exception.MediaNotAvailableException;
 import common.exception.PlaceOrderException;
 import controller.PlaceOrderController;
+import controller.PlaceRushOrderController;
 import controller.ViewCartController;
 import entity.cart.CartMedia;
 import entity.order.Order;
@@ -53,6 +54,9 @@ public class CartScreenHandler extends BaseScreenHandler {
 
 	@FXML
 	private Button btnPlaceOrder;
+	
+	@FXML
+	private Button btnPlcaeRushOrder;
 
 	public CartScreenHandler(Stage stage, String screenPath) throws IOException {
 		super(stage, screenPath);
@@ -79,7 +83,11 @@ public class CartScreenHandler extends BaseScreenHandler {
 			}
 			
 		});
+		
+		// on mouse clicked, we start processing place rush order usecase
+
 	}
+	
 
 	public Label getLabelAmount() {
 		return labelAmount;
@@ -124,6 +132,37 @@ public class CartScreenHandler extends BaseScreenHandler {
 			ShippingScreenHandler.setHomeScreenHandler(homeScreenHandler);
 			ShippingScreenHandler.setScreenTitle("Shipping Screen");
 			ShippingScreenHandler.setBController(placeOrderController);
+			ShippingScreenHandler.show();
+
+		} catch (MediaNotAvailableException e) {
+			// if some media are not available then display cart and break usecase Place Order
+			displayCartWithMediaAvailability();
+		}
+	}
+	
+	public void requestToPlaceRushOrder() throws SQLException, IOException {
+		try {
+			// create placeOrderController and process the order
+			PlaceRushOrderController placeRushOrderController = new PlaceRushOrderController();
+			if (placeRushOrderController.getListCartMedia().size() == 0){
+				PopupScreen.error("You don't have anything to place");
+				return;
+			}
+
+			placeRushOrderController.placeRushOrder();
+			
+			// display available media
+			displayCartWithMediaAvailability();
+
+			// create order
+			Order order = placeRushOrderController.createRushOrder();
+
+			// display shipping form
+			ShippingScreenHandler ShippingScreenHandler = new ShippingScreenHandler(this.stage, Configs.SHIPPING_SCREEN_PATH, order);
+			ShippingScreenHandler.setPreviousScreen(this);
+			ShippingScreenHandler.setHomeScreenHandler(homeScreenHandler);
+			ShippingScreenHandler.setScreenTitle("Shipping Screen");
+			ShippingScreenHandler.setBController(placeRushOrderController);
 			ShippingScreenHandler.show();
 
 		} catch (MediaNotAvailableException e) {

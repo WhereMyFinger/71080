@@ -48,6 +48,7 @@ public class API {
 	 * @throws Exception
 	 */
 	public static String get(String url, String token) throws Exception {
+		
 		//Step 1: setup
 		HttpURLConnection conn = setUpConnection(url, "GET", token);
 		
@@ -57,22 +58,30 @@ public class API {
 
 	}
 
+	int var;
+
 	/**
-	 * phuong thuc doc du lieu tra ve tu server 
-	 * @param conn: connection to server 
-	 * @return response: phan hoi tra ve tu server 
+	 * Phuoung thuc giup goi cac API dang POST (thanh toan,..)
+	 * @param url: duoung dan toi server can request
+	 * @param data: du lieu dua len server de xu ly (dang JSON)
+	 * @return: phan hoi tu server 
 	 * @throws IOException
 	 */
-	private static String readResponse(HttpURLConnection conn) throws IOException {
-		BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		String inputLine;
-		StringBuilder respone = new StringBuilder(); // using StringBuilder for the sake of memory and performance
-		while ((inputLine = in.readLine()) != null)
-			System.out.println(inputLine);
-		respone.append(inputLine + "\n");
-		in.close();
-		LOGGER.info("Respone Info: " + respone.substring(0, respone.length() - 1).toString());
-		return respone.substring(0, respone.length() - 1).toString();
+	public static String post(String url, String data, String token) throws IOException {
+		allowMethods("PATCH");
+		
+		//Step 1: setup
+		HttpURLConnection conn = setUpConnection(url, "PATCH", token);
+		
+		//Step 2: send data
+		String payload = data;
+		Writer writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+		writer.write(payload);
+		writer.close();
+		
+		//Step 3: read data from server 
+		return readResponse(conn);
+		
 	}
 
 	/**
@@ -95,30 +104,20 @@ public class API {
 		return conn;
 	}
 
-	int var;
-
 	/**
-	 * Phuoung thuc giup goi cac API dang POST (thanh toan,..)
-	 * @param url: duoung dan toi server can request
-	 * @param data: du lieu dua len server de xu ly (dang JSON)
-	 * @return: phan hoi tu server 
+	 * phuong thuc doc du lieu tra ve tu server 
+	 * @param conn: connection to server 
+	 * @return response: phan hoi tra ve tu server 
 	 * @throws IOException
 	 */
-	public static String post(String url, String data, String token) throws IOException {
-		allowMethods("PATCH");
-		
-		//Step 1: setup
-		HttpURLConnection conn = setUpConnection(url, "GET", token);
-		
-		//Step 2: send data
-		Writer writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-		writer.write(data);
-		writer.close();
-		
-		//Step 3: read data from server 
-		String response = readResponse(conn);
-		return response;
-		
+	private static String readResponse(HttpURLConnection conn) throws IOException {
+		BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		String inputLine;
+		StringBuilder respone = new StringBuilder(); // using StringBuilder for the sake of memory and performance
+		while ((inputLine = in.readLine()) != null) {
+			respone.append(inputLine);
+		}
+		return respone.toString();
 	}
 
 	/**

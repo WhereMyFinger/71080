@@ -17,7 +17,7 @@ import views.screen.popup.PopupScreen;
 
 /**
  * This class controls the flow of place order usecase in our AIMS project
- * @author nguyenlm
+ * @author nguyenlx_20173291
  */
 public class PlaceOrderController extends BaseController{
 
@@ -46,7 +46,7 @@ public class PlaceOrderController extends BaseController{
             OrderMedia orderMedia = new OrderMedia(cartMedia.getMedia(), 
                                                    cartMedia.getQuantity(), 
                                                    cartMedia.getPrice());    
-            order.getlstOrderMedia().add(orderMedia);
+            order.getlistOrderMedia().add(orderMedia);
         }
         return order;
     }
@@ -148,7 +148,6 @@ public class PlaceOrderController extends BaseController{
         }
     }
     
-
     /**
      * This method calculates the shipping fees of order
      * @param order

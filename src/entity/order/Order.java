@@ -28,7 +28,7 @@ public class Order {
         this.lstOrderMedia.remove(om);
     }
 
-    public List getlstOrderMedia() {
+    public List getlistOrderMedia() {
         return this.lstOrderMedia;
     }
 

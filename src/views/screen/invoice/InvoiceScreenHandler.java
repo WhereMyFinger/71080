@@ -74,7 +74,7 @@ public class InvoiceScreenHandler extends BaseScreenHandler {
 		int amount = invoice.getOrder().getAmount() + invoice.getOrder().getShippingFees();
 		total.setText(Utils.getCurrencyFormat(amount));
 		invoice.setAmount(amount);
-		invoice.getOrder().getlstOrderMedia().forEach(orderMedia -> {
+		invoice.getOrder().getlistOrderMedia().forEach(orderMedia -> {
 			try {
 				MediaInvoiceScreenHandler mis = new MediaInvoiceScreenHandler(Configs.INVOICE_MEDIA_SCREEN_PATH);
 				mis.setOrderMedia((OrderMedia) orderMedia);
